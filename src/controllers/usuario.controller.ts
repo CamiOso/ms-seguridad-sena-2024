@@ -27,6 +27,7 @@ import {
 import {LoginRepository, UsuarioRepository} from '../repositories';
 import {SeguridadUsuarioService} from '../services';
 import {service} from '@loopback/core';
+import {authenticate} from '@loopback/authentication';
 
 export class UsuarioController {
   constructor(
@@ -81,6 +82,8 @@ export class UsuarioController {
     return this.usuarioRepository.count(where);
   }
 
+
+  @authenticate('auth')
   @get('/usuario')
   @response(200, {
     description: 'Array of Usuario model instances',
