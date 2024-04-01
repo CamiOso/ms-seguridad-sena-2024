@@ -105,6 +105,10 @@ export class UsuarioController {
     return this.usuarioRepository.find(filter);
   }
 
+  @authenticate({
+    strategy:'auth',
+  options:[ConfiguracionSeguridad.menuUsuarioId,ConfiguracionSeguridad.editarAccion]})
+
   @patch('/usuario')
   @response(200, {
     description: 'Usuario PATCH success count',

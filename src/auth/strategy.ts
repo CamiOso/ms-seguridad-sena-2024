@@ -17,7 +17,7 @@ export class AuthStrategy implements AuthenticationStrategy {
     @repository(RolMenuRepository)
     private repositorioRolMenu: RolMenuRepository,
     @inject(AuthenticationBindings.METADATA)
-    private metadata?: AuthenticationMetadata
+    private metadata: AuthenticationMetadata[]
   ) {}
 
 
@@ -25,15 +25,15 @@ export class AuthStrategy implements AuthenticationStrategy {
   /**Autenticacion de un usuario frente a  una accion en la base de datos
    *
    * @param request la solicitud con el token
-   * @returns el perfil del usuario,undefined cuando no tiene permiso 
+   * @returns el perfil del usuario,undefined cuando no tiene permiso
    */
   async authenticate(request: Request): Promise<UserProfile | undefined> {
     let token = parseBearerToken(request);
 
     if(token){
       let idRol = this.servicioSeguridad.obtenerRolDesdeToken(token);
-      let idMenu: string = this.metadata?.options![0];
-      let accion: string = this.metadata?.options![1];
+      let idMenu: string = this.metadata[0].options![0];
+      let accion: string = this.metadata[0].options![1];
       let permiso = await this.repositorioRolMenu.findOne({
         where:{
           rolId: idRol,
