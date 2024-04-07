@@ -18,6 +18,8 @@ import {
 
 export {ApplicationConfig};
 
+
+
 export class App extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {

@@ -10,6 +10,8 @@ export namespace ConfiguracionSeguridad{
   export const menuPerforistasId="660a99b98ca7a0a75f13501c";
   export const menuMuestrasId="660a99ee8ca7a0a75f13501d";
 
+  export const mongodbConnectionString=process.env.CONNECTION_STRING_MONGODB;
+
 
 
 
