@@ -1,6 +1,6 @@
 
 export namespace ConfiguracionSeguridad{
-  export const claveJWT:string="Admin@2023*";
+  export const claveJWT=process.env.SECRET_PASSWORD_JWT;
   export const menuUsuarioId="6600b795dd6bbc11a87cfe62";
   export const menuPozosId="6604b6529fbad54c8d00a970";
   export const menuMinasId="660a98898ca7a0a75f135017";

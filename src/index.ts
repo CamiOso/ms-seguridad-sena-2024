@@ -1,5 +1,5 @@
 import {ApplicationConfig, App} from './application';
-require("dotenv").config();
+
 
 export * from './application';
 
