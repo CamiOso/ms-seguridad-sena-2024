@@ -255,7 +255,7 @@ export class UsuarioController {
 
   @post('/recuperar-clave')
   @response(200, {
-    description: 'identificar un usuario por correo y clave',
+    description: 'recuperar la clave de un usuario',
     content: {
       'application/json': {
         schema: getModelSchemaRef(Usuario),
@@ -289,7 +289,7 @@ export class UsuarioController {
 
 
       let datos={
-        numeroDestino:usuario.correo,
+        numeroDestino:usuario.celular,
         contenidoMensaje:`Hola ${usuario.primerNombre} ,su nueva clave es: ${nuevaClave}`
 
 
