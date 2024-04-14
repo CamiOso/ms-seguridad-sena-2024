@@ -20,6 +20,7 @@ import {
 } from '@loopback/rest';
 import {
   Credenciales,
+  CredencialesRecuperarClave,
   FactorDeAutenticacionPorCodigo,
   Login,
   PermisosRolMenu,
@@ -237,13 +238,78 @@ export class UsuarioController {
 
  let url=ConfiguracionNotificaciones.urlNotificaciones2fa;
 
- this.servicioNotificaciones.EnviarCorreoElectronico(datos,url);
+ this.servicioNotificaciones.EnviarNotificacion(datos,url);
 
 
       return usuario;
     }
     return new HttpErrors[401]('Credenciales incorrectas');
   }
+
+
+
+
+
+
+
+
+  @post('/recuperar-clave')
+  @response(200, {
+    description: 'identificar un usuario por correo y clave',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Usuario),
+      },
+    },
+  })
+  async RecuperarClaveUsuario(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(CredencialesRecuperarClave),
+        },
+      },
+    })
+    credenciales: CredencialesRecuperarClave,
+  ): Promise<Object> {
+    let usuario = await this.usuarioRepository.findOne({
+      where:{
+        correo:credenciales.correo
+      }
+    });
+    if (usuario) {
+      let nuevaClave=this.servicioSeguridad.crearTextoAleatorio(5);
+      console.log(nuevaClave);
+      let claveCifrada=this.servicioSeguridad.cifrarTexto(nuevaClave);
+
+      usuario.clave=claveCifrada;
+      this.usuarioRepository.updateById(usuario._id,usuario);
+
+      //notificar al usuario via  sms
+
+
+      let datos={
+        numeroDestino:usuario.correo,
+        contenidoMensaje:`Hola ${usuario.primerNombre} ,su nueva clave es: ${nuevaClave}`
+
+
+
+      }
+
+ let url=ConfiguracionNotificaciones.urlNotificacionesSms;
+
+ this.servicioNotificaciones.EnviarNotificacion(datos,url);
+
+
+      return usuario;
+    }
+    return new HttpErrors[401]('Credenciales incorrectas');
+  }
+
+
+
+
+
 
   @post('/validar-permisos')
   @response(200, {
