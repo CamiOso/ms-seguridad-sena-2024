@@ -22,6 +22,7 @@ import {
   Credenciales,
   CredencialesRecuperarClave,
   FactorDeAutenticacionPorCodigo,
+  HashValidacionUsuario,
   Login,
   PermisosRolMenu,
   Usuario,
@@ -452,6 +453,34 @@ let idRol = this.servicioSeguridad.obtenerRolDesdeToken(datos.token);
 
 
 
+
+  @post('/validar-hash-usuario')
+  @response(200, {
+    description: 'Validar hash',
+  })
+  async ValidarHashUsuario(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(HashValidacionUsuario, {}),
+        },
+      },
+    })
+    hash: HashValidacionUsuario,
+  ): Promise<boolean> {
+    let usuario = await this.usuarioRepository.findOne({
+      where: {
+        hashValidacion: hash.codigoHash,
+        estadoValidacion: false
+      }
+    });
+    if (usuario) {
+      usuario.estadoValidacion = true;
+      this.usuarioRepository.replaceById(usuario._id, usuario);
+      return true;
+    }
+    return false;
+  }
 
 
 
