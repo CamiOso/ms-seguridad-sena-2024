@@ -74,6 +74,7 @@
     "@loopback/build": "^11.0.0",
     "@loopback/eslint-config": "^15.0.0",
     "@loopback/testlab": "^7.0.0",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^16.18.86",
     "eslint": "^8.57.0",
     "source-map-support": "^0.5.21",

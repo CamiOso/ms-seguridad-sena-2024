@@ -11,8 +11,7 @@ export namespace ConfiguracionSeguridad{
   export const menuMuestrasId="660a99ee8ca7a0a75f13501d";
 
   export const mongodbConnectionString=process.env.CONNECTION_STRING_MONGODB;
-
-
+  export const rolUsuarioPublico="";
 
 
   export const listarAccion="listar";
