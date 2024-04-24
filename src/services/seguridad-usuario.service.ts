@@ -1,8 +1,8 @@
 import {injectable, /* inject, */ BindingScope} from '@loopback/core';
 import {Usuario} from '../models/usuario.model';
 import {repository} from '@loopback/repository';
-import {LoginRepository, UsuarioRepository} from '../repositories';
-import {Credenciales, FactorDeAutenticacionPorCodigo, Login} from '../models';
+import {LoginRepository, RolMenuRepository, RolRepository, UsuarioRepository} from '../repositories';
+import {Credenciales, FactorDeAutenticacionPorCodigo, Login, RolMenu} from '../models';
 import {ConfiguracionSeguridad} from '../config/seguridad.config';
 const generator = require('generate-password');
 const md5 = require('crypto-js/md5');
@@ -14,7 +14,9 @@ export class SeguridadUsuarioService {
     @repository(UsuarioRepository)
     public repositorioUsuario: UsuarioRepository,
     @repository (LoginRepository)
-    public repositorioLogin:LoginRepository
+    public repositorioLogin:LoginRepository,
+    @repository(RolMenuRepository)
+    private repositorioRolMenu: RolMenuRepository,
   ) {}
 
   /**
@@ -55,6 +57,8 @@ export class SeguridadUsuarioService {
       where: {
         correo: credenciales.correo,
         clave: credenciales.clave,
+        estadoValidacion: true,
+        aceptado: true,
       },
     });
 
@@ -106,6 +110,27 @@ export class SeguridadUsuarioService {
   obtenerRolDesdeToken(tk:string):string{
     let obj=jwt.verify(tk,ConfiguracionSeguridad.claveJWT);
     return obj.role;
+
+  }
+
+
+
+  /**
+   * Retorna los permiso del rol
+   * @param idRol id del rol a buscar y que esta asociado al usuario
+   */
+
+  async ConsultaPermisosDeMenuPorUsuario(idRol:string):Promise <RolMenu[ ]>{
+
+   let menu:RolMenu[ ]=await this.repositorioRolMenu.find({
+      where:{
+         listar:true,
+         rolId:idRol
+      }
+   })
+
+   return menu;
+
 
   }
 }

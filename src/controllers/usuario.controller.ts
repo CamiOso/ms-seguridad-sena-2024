@@ -82,6 +82,7 @@ export class UsuarioController {
 
     // Asignar la clave cifrada al usuario
     usuario.clave = claveCifrada;
+    usuario.estadoValidacion=true;
 
     //Enviar correo electronico de notificaciones
 
@@ -361,6 +362,7 @@ let idRol = this.servicioSeguridad.obtenerRolDesdeToken(datos.token);
     let usuario = await this.servicioSeguridad.validarCodigo2fa(credenciales);
     if (usuario) {
       let token = this.servicioSeguridad.crearToken(usuario);
+      let menu=[ ];
       if (usuario) {
         usuario.clave = '';
         try {
@@ -378,10 +380,13 @@ let idRol = this.servicioSeguridad.obtenerRolDesdeToken(datos.token);
             'No se ha almacenado el cambio del estado del token en la base de datos',
           );
         }
+        menu=await this.servicioSeguridad.ConsultaPermisosDeMenuPorUsuario(usuario.rolId);
+
         return {
           user: usuario,
 
           token: token,
+          menu:menu
         };
       }
     }
@@ -424,7 +429,7 @@ let idRol = this.servicioSeguridad.obtenerRolDesdeToken(datos.token);
     usuario.hashValidacion = hash;
     usuario.estadoValidacion = false;
     usuario.aceptado = false;
-    usuario.rolId = ConfiguracionSeguridad.rolUsuarioPublico;
+   usuario.rolId = ConfiguracionSeguridad.rolUsuarioPublico;
 
 
     // Notificación del hash
